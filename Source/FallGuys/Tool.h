@@ -18,6 +18,7 @@ public:
 	void EquipGrabInit();
 	void ApplyOverlay();
 	void ResetOverlay();
+	UTexture2D* GetTexture();
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

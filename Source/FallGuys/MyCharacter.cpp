@@ -34,11 +34,12 @@ void AMyCharacter::BeginPlay()
 	if (InventoryWidgetClass)
 	{
 		InventoryClass = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass/*UInventoryWidget::StaticClass()*/);
+		InventoryWidgetInst = Cast<UInventoryWidget>(InventoryClass);
 
-		if (InventoryClass)
+		if (/*InventoryClass*/InventoryWidgetInst)
 		{
-			InventoryClass->AddToViewport();
-			InventoryClass->SetVisibility(ESlateVisibility::Hidden); // Ã³À½¿¡´Â ¼û±è
+			/*InventoryClass*/InventoryWidgetInst->AddToViewport();
+			/*InventoryClass*/InventoryWidgetInst->SetVisibility(ESlateVisibility::Hidden); // Ã³À½¿¡´Â ¼û±è
 
 			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("InvenClass: %s"), *InventoryClass->GetName()));
 		}
@@ -208,6 +209,10 @@ void AMyCharacter::Grab(const FInputActionValue& Value)
 	ToolInstance = HitResult.GetActor();
 	isGrab = true;
 
+	/*UInventoryWidget* Widget = Cast<UInventoryWidget>(InventoryWidgetClass);*/
+	if (nullptr != Tool->GetTexture())
+		InventoryWidgetInst->SetWidgetImage(Tool->GetTexture());
+
 	//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Red, false, 10);
 }
 
@@ -215,9 +220,9 @@ void AMyCharacter::Inven(const FInputActionValue& Value)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("InvenClass: %s"), *InventoryClass->GetName()));
 	
-	if (InventoryClass)
+	if (/*InventoryClass*/InventoryWidgetInst)
 	{
-		InventoryClass->SetVisibility(
-			InventoryClass->IsVisible() ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
+		/*InventoryClass*/InventoryWidgetInst->SetVisibility(
+			/*InventoryClass*/InventoryWidgetInst->IsVisible() ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
 	}
 }

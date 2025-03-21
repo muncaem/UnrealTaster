@@ -73,6 +73,10 @@ void ATool::ResetOverlay()
 	if (!Mesh) return;
 
 	Mesh->SetOverlayMaterial(nullptr);
-	//Mesh->SetRenderCustomDepth(false);  // 커스텀 뎁스 비활성화 (아웃라인 제거)
+}
+
+UTexture2D* ATool::GetTexture()
+{
+	return ToolTexture;
 }
 

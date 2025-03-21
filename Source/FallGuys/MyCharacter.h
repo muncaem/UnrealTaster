@@ -42,6 +42,9 @@ protected:
 	UPROPERTY()
 	UUserWidget* InventoryClass;
 
+	UPROPERTY()
+	UInventoryWidget* InventoryWidgetInst;
+
 private:
 	float MeshRotationDegree = 0;
 	float SearchDistance = 500;
