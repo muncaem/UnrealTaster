@@ -49,6 +49,7 @@ private:
 	float MeshRotationDegree = 0;
 	float SearchDistance = 500;
 	bool isGrab = false;
+	bool isOpenUI = false;
 
 	TObjectPtr<AActor> ToolInstance;
 

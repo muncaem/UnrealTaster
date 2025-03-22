@@ -33,21 +33,13 @@ void AMyCharacter::BeginPlay()
 	
 	if (InventoryWidgetClass)
 	{
-		InventoryClass = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass/*UInventoryWidget::StaticClass()*/);
-		InventoryWidgetInst = Cast<UInventoryWidget>(InventoryClass);
-
-		if (/*InventoryClass*/InventoryWidgetInst)
+		InventoryWidgetInst = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
+		if (InventoryWidgetInst)
 		{
-			/*InventoryClass*/InventoryWidgetInst->AddToViewport();
-			/*InventoryClass*/InventoryWidgetInst->SetVisibility(ESlateVisibility::Hidden); // 처음에는 숨김
-
-			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("InvenClass: %s"), *InventoryClass->GetName()));
+			InventoryWidgetInst->AddToViewport();
+			InventoryWidgetInst->SetVisibility(ESlateVisibility::Hidden); // 첫 시작은 숨김
 		}
-		else
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("InvenClass Failed")));
 	}
-	else
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("WidgetClass Failed")));
 }
 
 // Called every frame
@@ -76,6 +68,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::Look(const FInputActionValue& Value)
 {
+	if (isOpenUI) return;
+
 	FVector2D Data = Value.Get<FVector2D>();
 
 	AddControllerYawInput(Data.Y);
@@ -157,6 +151,8 @@ void AMyCharacter::OnJump(const FInputActionValue& Value)
 
 void AMyCharacter::Grab(const FInputActionValue& Value)
 {
+	if (isOpenUI) return;
+
 	if (isGrab)
 	{
 		ToolInstance->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
@@ -218,11 +214,17 @@ void AMyCharacter::Grab(const FInputActionValue& Value)
 
 void AMyCharacter::Inven(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("InvenClass: %s"), *InventoryClass->GetName()));
-	
-	if (/*InventoryClass*/InventoryWidgetInst)
-	{
-		/*InventoryClass*/InventoryWidgetInst->SetVisibility(
-			/*InventoryClass*/InventoryWidgetInst->IsVisible() ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
-	}
+	if (!InventoryWidgetInst) return;
+
+	// 진짜 현재 상태 확인
+	ESlateVisibility CurrentVis = InventoryWidgetInst->GetVisibility();
+	ESlateVisibility NewVisibility = (CurrentVis == ESlateVisibility::Visible)
+		? ESlateVisibility::Hidden
+		: ESlateVisibility::Visible;
+
+	isOpenUI = NewVisibility == ESlateVisibility::Visible ? true : false;
+
+	// 바꾸기
+	InventoryWidgetInst->SetVisibility(NewVisibility);
+	InventoryWidgetInst->OnVisibleChanged(NewVisibility, Cast<APlayerController>(GetController()));
 }
