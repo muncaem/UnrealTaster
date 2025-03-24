@@ -31,6 +31,25 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//게임인스턴스의 인벤토리시스템 가져오기.
+	if (const auto* GI = GetGameInstance<UMyGameInstance>())
+	{
+		if (GI->PublicInventory)
+		{
+			CachedInventory = GI->PublicInventory;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("PublicInventory is NULL!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("GameInstance is NULL!"));
+	}
+
+
+	//인벤토리 ui 가져오기.
 	if (InventoryWidgetClass)
 	{
 		InventoryWidgetInst = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
@@ -205,11 +224,11 @@ void AMyCharacter::Grab(const FInputActionValue& Value)
 	ToolInstance = HitResult.GetActor();
 	isGrab = true;
 
-	/*UInventoryWidget* Widget = Cast<UInventoryWidget>(InventoryWidgetClass);*/
 	if (nullptr != Tool->GetTexture())
 		InventoryWidgetInst->SetWidgetImage(Tool->GetTexture());
-
-	//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Red, false, 10);
+	CachedInventory->AddItem(FInventoryItem(ToolInstance.GetFName(), 1, Tool->GetClass(), Tool->GetTexture()));
+	/// 이미지 세팅하는건 어디서 하지? 일단 데이터 구조적으로 아이템 넣었음.
+	/// 그리고 넣은 아이템 위젯에 넣고/ 넣은 아이템 사용까지 하면 될 듯.
 }
 
 void AMyCharacter::Inven(const FInputActionValue& Value)

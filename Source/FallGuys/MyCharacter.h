@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "MyGameInstance.h"
 #include "InventoryWidget.h"
 #include "InputActionValue.h"
 #include "EngineMinimal.h"
@@ -44,6 +45,9 @@ protected:
 
 	UPROPERTY()
 	UInventoryWidget* InventoryWidgetInst;
+
+	UPROPERTY()
+	UInventorySystem* CachedInventory;
 
 private:
 	float MeshRotationDegree = 0;
