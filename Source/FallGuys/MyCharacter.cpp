@@ -59,6 +59,9 @@ void AMyCharacter::BeginPlay()
 			InventoryWidgetInst->SetVisibility(ESlateVisibility::Hidden); // 첫 시작은 숨김
 		}
 	}
+
+	if (CachedInventory && InventoryWidgetInst)
+		CachedInventory->SetInventoryWidget(InventoryWidgetInst);
 }
 
 // Called every frame
@@ -224,26 +227,27 @@ void AMyCharacter::Grab(const FInputActionValue& Value)
 	ToolInstance = HitResult.GetActor();
 	isGrab = true;
 
-	if (nullptr != Tool->GetTexture())
-		InventoryWidgetInst->SetWidgetImage(Tool->GetTexture());
+	/*if (nullptr != Tool->GetTexture())
+		InventoryWidgetInst->SetWidgetImage(Tool->GetTexture());*/ //-> 이거 InventorySystem으로 뺌
+
 	CachedInventory->AddItem(FInventoryItem(ToolInstance.GetFName(), 1, Tool->GetClass(), Tool->GetTexture()));
-	/// 이미지 세팅하는건 어디서 하지? 일단 데이터 구조적으로 아이템 넣었음.
-	/// 그리고 넣은 아이템 위젯에 넣고/ 넣은 아이템 사용까지 하면 될 듯.
 }
 
 void AMyCharacter::Inven(const FInputActionValue& Value)
 {
-	if (!InventoryWidgetInst) return;
+	if (CachedInventory)
+		CachedInventory->ToggleInventoryUI(GetController());
+	//if (!InventoryWidgetInst) return;
 
-	// 진짜 현재 상태 확인
-	ESlateVisibility CurrentVis = InventoryWidgetInst->GetVisibility();
-	ESlateVisibility NewVisibility = (CurrentVis == ESlateVisibility::Visible)
-		? ESlateVisibility::Hidden
-		: ESlateVisibility::Visible;
+	//// 진짜 현재 상태 확인
+	//ESlateVisibility CurrentVis = InventoryWidgetInst->GetVisibility();
+	//ESlateVisibility NewVisibility = (CurrentVis == ESlateVisibility::Visible)
+	//	? ESlateVisibility::Hidden
+	//	: ESlateVisibility::Visible;
 
-	isOpenUI = NewVisibility == ESlateVisibility::Visible ? true : false;
+	//isOpenUI = NewVisibility == ESlateVisibility::Visible ? true : false;
 
-	// 바꾸기
-	InventoryWidgetInst->SetVisibility(NewVisibility);
-	InventoryWidgetInst->OnVisibleChanged(NewVisibility, Cast<APlayerController>(GetController()));
+	//// 바꾸기
+	//InventoryWidgetInst->SetVisibility(NewVisibility);
+	//InventoryWidgetInst->OnVisibleChanged(NewVisibility, Cast<APlayerController>(GetController()));
 }

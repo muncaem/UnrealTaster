@@ -3,6 +3,20 @@
 
 #include "InventorySystem.h"
 
+void UInventorySystem::ToggleInventoryUI(AController* OwningController)
+{
+    if (!InventoryWidget || !OwningController) return;
+
+    bIsUIOpen = !bIsUIOpen;
+
+    ESlateVisibility NewVisibility = bIsUIOpen
+        ? ESlateVisibility::Visible
+        : ESlateVisibility::Hidden;
+
+    InventoryWidget->SetVisibility(NewVisibility);
+    InventoryWidget->OnVisibleChanged(NewVisibility, Cast<APlayerController>(OwningController));
+}
+
 void UInventorySystem::AddItem(const FInventoryItem& NewItem)
 {
     for (FInventoryItem& Item : Items)
@@ -15,6 +29,7 @@ void UInventorySystem::AddItem(const FInventoryItem& NewItem)
     }
 
     Items.Add(NewItem);
+    SetSlotImage(NewItem.Icon);
 }
 
 bool UInventorySystem::GetItem(int32 Index, FInventoryItem& OutItem) const
@@ -30,4 +45,12 @@ bool UInventorySystem::GetItem(int32 Index, FInventoryItem& OutItem) const
 const TArray<FInventoryItem>& UInventorySystem::GetAllItems() const
 {
     return Items;
+}
+
+void UInventorySystem::SetSlotImage(UTexture2D* Icon)
+{
+    if (InventoryWidget)
+    {
+        InventoryWidget->SetWidgetImage(Icon);
+    }
 }

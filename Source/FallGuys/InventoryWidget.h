@@ -21,6 +21,14 @@ public:
 
 	void OnVisibleChanged(ESlateVisibility InVisibility, APlayerController* InPlayerController);
 
+	int32 GetSlotClickIndex(int32 idx);
+
+protected:
+	void BindSlotClickHandler();
+
+	UFUNCTION()
+	void OnItemClicked(int32 SlotIdx);
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	int32 ItemValue = 0;
@@ -29,6 +37,7 @@ protected:
 	int32 MaxItem = 15;
 
 	TArray<UImage*> ItemWidget;
+	TArray<UButton*> ItemButton;
 	
 public:
 	virtual void NativeConstruct() override;

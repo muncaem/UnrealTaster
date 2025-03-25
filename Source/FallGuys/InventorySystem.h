@@ -2,6 +2,8 @@
 
 #pragma once
 
+
+#include "InventoryWidget.h"
 #include "EngineMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "InventorySystem.generated.h"
@@ -40,9 +42,21 @@ public:
 	UPROPERTY()
 	TArray<FInventoryItem> Items;
 
+private:
+	UPROPERTY()
+	UInventoryWidget* InventoryWidget = nullptr;
+
+	bool bIsUIOpen = false;
+
 public:
+	void ToggleInventoryUI(AController* OwningController);
+	void SetInventoryWidget(UInventoryWidget* InWidget)
+	{ InventoryWidget = InWidget; }
+
 	void AddItem(const FInventoryItem& NewItem);
 	//void RemoveItem(int32 Index);
 	bool GetItem(int32 Index, FInventoryItem& OutItem) const;
 	const TArray<FInventoryItem>& GetAllItems() const;
+
+	void SetSlotImage(UTexture2D* Icon);
 };
