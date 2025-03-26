@@ -34,6 +34,8 @@ protected:
 	class UInputAction* GrabAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* InvenAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* ItemGetAction;
 
 	// 클래스 설정용
 	UPROPERTY(EditAnywhere)
@@ -75,4 +77,5 @@ protected:
 	void OnJump(const FInputActionValue& Value);
 	void Grab(const FInputActionValue& Value);
 	void Inven(const FInputActionValue& Value);
+	void GetItem(const FInputActionValue& Value);
 };

@@ -84,6 +84,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		UIC->BindAction(JumpAction, ETriggerEvent::Started, this, &AMyCharacter::OnJump);
 		UIC->BindAction(GrabAction, ETriggerEvent::Started, this, &AMyCharacter::Grab);
 		UIC->BindAction(InvenAction, ETriggerEvent::Started, this, &AMyCharacter::Inven);
+		UIC->BindAction(ItemGetAction, ETriggerEvent::Started, this, &AMyCharacter::GetItem);
 	}
 }
 
@@ -227,27 +228,41 @@ void AMyCharacter::Grab(const FInputActionValue& Value)
 	ToolInstance = HitResult.GetActor();
 	isGrab = true;
 
-	/*if (nullptr != Tool->GetTexture())
-		InventoryWidgetInst->SetWidgetImage(Tool->GetTexture());*/ //-> 이거 InventorySystem으로 뺌
-
-	CachedInventory->AddItem(FInventoryItem(ToolInstance.GetFName(), 1, Tool->GetClass(), Tool->GetTexture()));
+	/*CachedInventory->AddItem(FInventoryItem(ToolInstance.GetFName(), 1, Tool->GetClass(), Tool->GetTexture()));*/
 }
 
 void AMyCharacter::Inven(const FInputActionValue& Value)
 {
 	if (CachedInventory)
 		CachedInventory->ToggleInventoryUI(GetController());
-	//if (!InventoryWidgetInst) return;
+}
 
-	//// 진짜 현재 상태 확인
-	//ESlateVisibility CurrentVis = InventoryWidgetInst->GetVisibility();
-	//ESlateVisibility NewVisibility = (CurrentVis == ESlateVisibility::Visible)
-	//	? ESlateVisibility::Hidden
-	//	: ESlateVisibility::Visible;
+void AMyCharacter::GetItem(const FInputActionValue& Value)
+{
+	const FVector Start = GetActorLocation();
+	const FVector End = Start + GetActorForwardVector() * SearchDistance;
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 10);
 
-	//isOpenUI = NewVisibility == ESlateVisibility::Visible ? true : false;
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(50.f);
+	FHitResult HitResult;
 
-	//// 바꾸기
-	//InventoryWidgetInst->SetVisibility(NewVisibility);
-	//InventoryWidgetInst->OnVisibleChanged(NewVisibility, Cast<APlayerController>(GetController()));
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 제외
+
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		FQuat::Identity,
+		ECC_GameTraceChannel1,
+		Sphere,
+		QueryParams
+	);
+
+	if (!HasHit) return;
+
+	ATool* Tool = Cast<ATool>(HitResult.GetActor());
+	if (!Tool) return;
+
+	CachedInventory->AddItem(FInventoryItem(Tool->GetFName(), 1, Tool->GetClass(), Tool->GetTexture(), Tool));
 }
