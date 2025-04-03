@@ -42,6 +42,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Lighting")
 	TObjectPtr<ASkyLight> SkyLight; // SkyLight 전체 조명 캡처
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<ADirectionalLight> MoonLight; // 밤 전용 조명
+
 private:
 	void UpdateSun();
 };

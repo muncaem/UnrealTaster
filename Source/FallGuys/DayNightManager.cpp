@@ -39,50 +39,46 @@ void ADayNightManager::Tick(float DeltaTime)
 
 void ADayNightManager::UpdateSun()
 {
-	if (!SunLight) return;
+	if (!SunLight || !SkyLight) return;
 
-	// 6시는 0도 => 동쪽 지평선에서 시작.
+	// 해 각도 계산
 	float SunPitch = ((TimeOfDay - 6) / 12.f) * 180.f - 90.f;
-	
-	// Sun 회전각 조절
 	FRotator NewRotation = FRotator(SunPitch, -90.f, 0.f);
 	SunLight->SetActorRotation(NewRotation);
 
-	// 아침/저녁 보정용: 코사인 커브 기반 조절
-	float SunAngleRad = FMath::DegreesToRadians(SunPitch);
-	float RawFactor = FMath::Clamp(FMath::Cos(SunAngleRad), 0.f, 1.f); // 0~1 사이
-	float AdjustedFactor = FMath::Lerp(0.2f, 1.0f, RawFactor); // 기본 밝기 0.2부터 시작
-	//최종밝기
-	float FinalIntensity = 5000.f * AdjustedFactor;
-	SunLight->GetLightComponent()->SetIntensity(FinalIntensity);
 
-	//GEngine->AddOnScreenDebugMessage(
-	//	-1,
-	//	5.0f,
-	//	FColor::Red,
-	//	FString::Printf(TEXT("TimeOfDay: %.2f, Intensity: %.2f , NewRotation: %s"),
-	//		TimeOfDay,
-	//		Intensity,
-	//		*NewRotation.ToString()) // Rotator는 .ToString() 후 * 로 FString → TCHAR* 변환
-	//);
+	// Directional Light (태양)
+	float MinSunIntensity = 0.3f;  // 기존 0.01 → 이제 0.3 이상
+	float MaxSunIntensity = 6.0f;
+
+	float SunFactor = FMath::Clamp(FMath::Cos(FMath::DegreesToRadians(SunPitch)), 0.f, 1.f);
+	float FinalSunIntensity = FMath::Lerp(MinSunIntensity, MaxSunIntensity, SunFactor);
+	SunLight->GetLightComponent()->SetIntensity(FinalSunIntensity);
+
+	// SkyLight 조절
+	float MinSkyIntensity = 0.1f;
+	float MaxSkyIntensity = 2.0f;
+
+	float SkyFactor = SunFactor;  // 같은 기준 사용
+	float FinalSkyIntensity = FMath::Lerp(MinSkyIntensity, MaxSkyIntensity, SkyFactor);
+	SkyLight->GetLightComponent()->SetIntensity(FinalSkyIntensity);
+	SkyLight->GetLightComponent()->RecaptureSky();
 
 
-	// 하늘 텍스처 업데이트 -> 해처럼 보이는 부분 렌더링
+	// 하늘 머터리얼도 업데이트
 	if (SkySphereActor)
 	{
 		UFunction* UpdateFunc = SkySphereActor->FindFunction(FName("UpdateSunDirection"));
 		if (UpdateFunc)
 			SkySphereActor->ProcessEvent(UpdateFunc, nullptr);
-
-		/*UFunction* RefreshFunc = SkySphereActor->FindFunction(FName("RefreshMaterial"));
-		if (RefreshFunc)
-		{
-			SkySphereActor->ProcessEvent(RefreshFunc, nullptr);
-		}*/
 	}
 
-	if (SkyLight && SkyLight->GetLightComponent())
+	// Night용 조명
+	bool bIsNight = (TimeOfDay < 6 || TimeOfDay > 18);
+	if (MoonLight)
 	{
-		SkyLight->GetLightComponent()->RecaptureSky();
+		MoonLight->SetActorHiddenInGame(!bIsNight);
+		MoonLight->GetLightComponent()->SetIntensity(bIsNight ? 0.5f : 0.f); // 아주 부드럽게
 	}
+
 }
