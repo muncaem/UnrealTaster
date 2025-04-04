@@ -20,6 +20,13 @@ public:
 	void ResetOverlay();
 	UTexture2D* GetTexture();
 
+	UFUNCTION(BlueprintCallable, Category = "Tool")
+	USpotLightComponent* ToggleFlashlight(); //spotlight 컴포넌트로 가지고 있는지 체크용
+
+private:
+	void OnEquippedActivities(); //아이템 들었을 때 상호작용
+	void OnDroppedActivities(); //아이템 놓았을 때 상호작용
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<class UStaticMeshComponent> Mesh;

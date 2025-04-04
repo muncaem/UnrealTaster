@@ -1,12 +1,6 @@
 #include "Tool.h"
-#include "Tool.h"
-#include "Tool.h"
-#include "Tool.h"
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Tool.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SpotLightComponent.h"
 
 
 // Sets default values
@@ -28,7 +22,7 @@ ATool::ATool()
 void ATool::BeginPlay()
 {
 	Super::BeginPlay();
-
+	OnDroppedActivities();
 }
 
 void ATool::EquipInitialize()
@@ -39,6 +33,7 @@ void ATool::EquipInitialize()
 
 	isGrab = true;
 	ResetOverlay();
+	OnEquippedActivities();
 }
 
 void ATool::EquipGrabInit()
@@ -50,6 +45,7 @@ void ATool::EquipGrabInit()
 	Mesh->SetRelativeLocation(FVector(-20, 0, 0));
 
 	isGrab = false;
+	OnDroppedActivities();
 }
 
 void ATool::ApplyOverlay()
@@ -78,5 +74,25 @@ void ATool::ResetOverlay()
 UTexture2D* ATool::GetTexture()
 {
 	return ToolTexture;
+}
+
+USpotLightComponent*  ATool::ToggleFlashlight()
+{
+	USpotLightComponent* Flashlight = FindComponentByClass<USpotLightComponent>();
+	if (Flashlight)
+		return Flashlight;
+	else return nullptr;
+}
+
+void ATool::OnEquippedActivities()
+{
+	if (USpotLightComponent * Flashlight = ToggleFlashlight())
+		Flashlight->SetVisibility(true);
+}
+
+void ATool::OnDroppedActivities()
+{
+	if (USpotLightComponent* Flashlight = ToggleFlashlight())
+		Flashlight->SetVisibility(false);
 }
 
