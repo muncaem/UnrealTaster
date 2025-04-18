@@ -45,11 +45,11 @@ public:
 
 	TObjectPtr<AActor> CurrentTargetPoint;
 
-	// 선택적으로 바인딩할 델리게이트
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNPCInteracted);
+	//// 선택적으로 바인딩할 델리게이트
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNPCInteracted);
 
-	UPROPERTY(BlueprintAssignable)
-	FOnNPCInteracted OnInteracted;
+	//UPROPERTY(BlueprintAssignable)
+	//FOnNPCInteracted OnInteracted;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsTalking = false;
@@ -65,17 +65,18 @@ protected:
 	void MoveToTarget();
 	void SwitchTarget();
 
-	FTimerHandle PatrolTimerHandle;
+	//FTimerHandle PatrolTimerHandle;
 
 
 
-	void Interact()
-	{
-		if (bCanInteract)
-		{
-			OnInteracted.Broadcast();
-		}
-	}
+	//void Interact()
+	//{
+	//	if (bCanInteract)
+	//	{
+	//		OnInteracted.Broadcast();
+	//	}
+	//}
+	// 
 	//그리고 상호작용이 필요한 NPC에서만:
 	/*class AMerchantNPC : public ANPCBase
 	{
