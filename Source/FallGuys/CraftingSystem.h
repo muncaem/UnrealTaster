@@ -44,13 +44,13 @@ struct FCraftBaseData : public FTableRowBase
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, EditInlineNew)
 class FALLGUYS_API UCraftingSystem : public UObject
 {
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FCraftBaseData> AllRecipes;
 
 	bool CanCraft(FName RecipeID, const TArray<FInventoryItem>& Inventory);
