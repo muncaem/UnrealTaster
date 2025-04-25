@@ -65,7 +65,10 @@ void UCraftingSystem::Craft(int32 Index, UInventorySystem* Inventory)
 	}
 
 	// 재료로 사용된 아이템 제거
-	//Inventory->RemoveItem();
+	for (const FReceiptItem& RecipeDatas : AllRecipes[Index].Ingredients)
+	{
+		Inventory->RemoveItemByID(RecipeDatas.ItemID, RecipeDatas.Quantity);
+	}
 
 	// 새로운 아이템 인벤토리로 반환 (액터 생성은 인벤토리 시스템에서 처리)
 	FInventoryItem CraftedItem(
@@ -75,4 +78,5 @@ void UCraftingSystem::Craft(int32 Index, UInventorySystem* Inventory)
 		AllRecipes[Index].Icon
 	);
 	Inventory->AddItem(CraftedItem);
+
 }

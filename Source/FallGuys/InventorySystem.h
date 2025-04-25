@@ -56,7 +56,7 @@ public:
 	void DropItemByIndex(int32 SlotIndex, FVector DropLocation);
 
 	void AddItem(const FInventoryItem& NewItem);
-	//void RemoveItem(int32 Index);
+	void RemoveItemByID(FName ItemID, int32 MinusQuantity = 1);
 	bool GetItem(int32 Index, FInventoryItem& OutItem) const;
 	const TArray<FInventoryItem>& GetAllItems() const;
 

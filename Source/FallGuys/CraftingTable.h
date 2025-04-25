@@ -13,8 +13,6 @@ class FALLGUYS_API ACraftingTable : public AActor
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditAnywhere, Category = "CraftData")
-	TArray<FCraftBaseData> CraftData;
 	UPROPERTY()
 	UCraftingSystem* CraftingSystem; // CraftingSystem내부에서 생성
 

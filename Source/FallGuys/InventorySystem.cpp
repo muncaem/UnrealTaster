@@ -81,6 +81,26 @@ void UInventorySystem::AddItem(const FInventoryItem& NewItem)
     /*SetSlotImage(NewItem.Icon);*/
 }
 
+void UInventorySystem::RemoveItemByID(FName ItemID, int32 MinusQuantity)
+{
+    for (int32 i = 0; i < Items.Num(); ++i)
+    {
+        if (Items[i].ItemID == ItemID)
+        {
+            if (Items[i].Quantity > MinusQuantity)
+            {
+                Items[i].Quantity -= MinusQuantity;
+            }
+            else
+            {
+                // 수량이 0 이하라면 아이템 제거
+                Items.RemoveAt(i);
+            }
+            break;  // 첫 번째 발견된 아이템만 처리 (중복 없는 경우)
+        }
+    }
+}
+
 bool UInventorySystem::GetItem(int32 Index, FInventoryItem& OutItem) const
 {
     if (Items.IsValidIndex(Index))
