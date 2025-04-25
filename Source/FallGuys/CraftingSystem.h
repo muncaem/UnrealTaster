@@ -24,7 +24,7 @@ struct FCraftBaseData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
-	FName CraftName = "";
+	FName CraftID = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
 	TArray<FReceiptItem> Ingredients;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
@@ -39,6 +39,8 @@ struct FCraftBaseData : public FTableRowBase
 	FString Description;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
 	FString Effection;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
+	UTexture2D* Icon;
 };
 
 /**
@@ -53,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FCraftBaseData> AllRecipes;
 
-	bool CanCraft(FName RecipeID, const TArray<FInventoryItem>& Inventory);
-	void Craft(FName RecipeID, UInventorySystem* Inventory);
+private:
+	TArray<FCraftBaseData> GetCraftList();
+	FCraftBaseData GetCraftItemData(int32 Index);
+	bool CanCraft(int32 Index, const TArray<FInventoryItem>& Inventory);
+	void Craft(int32 Index, UInventorySystem* Inventory);
 };
