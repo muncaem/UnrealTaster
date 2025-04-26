@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CraftingSystem.h"
 #include "InventorySystem.h"
 #include "EngineMinimal.h"
 #include "Engine/GameInstance.h"
@@ -20,4 +21,7 @@ public:
 public:
 	UPROPERTY()
 	UInventorySystem* PublicInventory;
+
+	UPROPERTY()
+	UCraftingSystem* PublicCraftingSystem;
 };

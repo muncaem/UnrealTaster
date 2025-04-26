@@ -55,8 +55,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FCraftBaseData> AllRecipes;
 
-private:
+public:
 	TArray<FCraftBaseData> GetCraftList();
+
+private:
 	FCraftBaseData GetCraftItemData(int32 Index);
 	bool CanCraft(int32 Index, const TArray<FInventoryItem>& Inventory);
 	void Craft(int32 Index, UInventorySystem* Inventory);

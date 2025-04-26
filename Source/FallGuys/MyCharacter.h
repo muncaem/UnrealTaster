@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CraftWidget.h"
 #include "MyGameInstance.h"
 #include "InventoryWidget.h"
 #include "InputActionValue.h"
@@ -51,6 +52,13 @@ protected:
 	UPROPERTY()
 	UInventorySystem* CachedInventory;
 
+	// ¡¶¿€ ¿ß¡¨
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCraftWidget> CraftWidgetClass;
+
+	UPROPERTY()
+	UCraftWidget* CraftWidgetInst;
+
 private:
 	float MeshRotationDegree = 0;
 	float SearchDistance = 500;
@@ -78,4 +86,8 @@ protected:
 	void Grab(const FInputActionValue& Value);
 	void Inven(const FInputActionValue& Value);
 	void GetItem(const FInputActionValue& Value);
+
+public:
+	UFUNCTION()
+	void OpenCraftWidget();
 };

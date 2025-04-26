@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CraftingSystem.h"
+#include "CraftWidget.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CraftingTable.generated.h"
@@ -12,15 +12,8 @@ class FALLGUYS_API ACraftingTable : public AActor
 {
 	GENERATED_BODY()
 	
-public:
-	UPROPERTY()
-	UCraftingSystem* CraftingSystem; // CraftingSystem내부에서 생성
-
-	// 플레이어가 상호작용하면 호출
-	void OpenCraftUI();
-	// 실제 제작 실행
-	bool TryCraft();
-
+protected:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
 
 public:	
 	// Sets default values for this actor's properties

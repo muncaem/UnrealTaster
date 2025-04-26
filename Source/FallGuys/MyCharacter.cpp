@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Tool.h"
+#include "EventHub.h"
 //UKismetMathLibrary 클래스는 수학 계산과 관련된 다양한 유용한 함수들을 제공.
 
 // Sets default values
@@ -30,7 +31,7 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	//게임인스턴스의 인벤토리시스템 가져오기.
 	if (const auto* GI = GetGameInstance<UMyGameInstance>())
 	{
@@ -62,6 +63,8 @@ void AMyCharacter::BeginPlay()
 
 	if (CachedInventory && InventoryWidgetInst)
 		CachedInventory->SetInventoryWidget(InventoryWidgetInst);
+
+	UEventHub::Get()->OnActionHitCraftTable.AddDynamic(this, &AMyCharacter::OpenCraftWidget);
 }
 
 // Called every frame
@@ -157,7 +160,7 @@ void AMyCharacter::CheckForSweepHit()
 	if (HasHit)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName()));
-		
+
 		ATool* Tool = Cast<ATool>(HitResult.GetActor());
 		if (!Tool) return;
 		Tool->ApplyOverlay();
@@ -265,4 +268,26 @@ void AMyCharacter::GetItem(const FInputActionValue& Value)
 	if (!Tool) return;
 
 	CachedInventory->AddItem(FInventoryItem(Tool->GetFName(), 1, Tool->GetClass(), Tool->GetTexture(), Tool));
+}
+
+void AMyCharacter::OpenCraftWidget()
+{
+
+	// 위젯 아직 없으면 생성
+	if (!CraftWidgetInst)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("OpenCraftWidget")));
+		CraftWidgetInst = CreateWidget<UCraftWidget>(GetWorld(), CraftWidgetClass);
+		if (CraftWidgetClass)
+		{
+			CraftWidgetInst->InitWidget(GetGameInstance<UMyGameInstance>()->PublicCraftingSystem);
+			CraftWidgetInst->AddToViewport();
+		}
+	}
+
+	// 뷰포트에 띄워져 있지 않으면 띄우기
+	if (!CraftWidgetInst->IsInViewport())
+	{
+		CraftWidgetInst->AddToViewport();
+	}
 }

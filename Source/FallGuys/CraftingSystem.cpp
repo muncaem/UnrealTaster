@@ -13,7 +13,7 @@
 // 제작 리스트 RETURN
 TArray<FCraftBaseData> UCraftingSystem::GetCraftList()
 {
-	return TArray<FCraftBaseData>();
+	return AllRecipes;
 }
 
 // 제작 리스트에서 아이템 클릭/호버 시 아이템 데이터 정보 RETURN
