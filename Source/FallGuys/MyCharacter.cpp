@@ -272,22 +272,43 @@ void AMyCharacter::GetItem(const FInputActionValue& Value)
 
 void AMyCharacter::OpenCraftWidget()
 {
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC) return;
 
 	// 위젯 아직 없으면 생성
 	if (!CraftWidgetInst)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("OpenCraftWidget")));
 		CraftWidgetInst = CreateWidget<UCraftWidget>(GetWorld(), CraftWidgetClass);
 		if (CraftWidgetClass)
 		{
-			CraftWidgetInst->InitWidget(GetGameInstance<UMyGameInstance>()->PublicCraftingSystem);
+			CraftWidgetInst->InitWidget(GetGameInstance<UMyGameInstance>()->PublicCraftingSystem, PC);
 			CraftWidgetInst->AddToViewport();
 		}
 	}
 
 	// 뷰포트에 띄워져 있지 않으면 띄우기
-	if (!CraftWidgetInst->IsInViewport())
+	if (CraftWidgetInst->IsInViewport())
 	{
+		// 이미 뷰포트에 있을 때 → Visibility가 Hidden이면 Visible로
+		if (CraftWidgetInst->GetVisibility() != ESlateVisibility::Visible)
+		{
+			CraftWidgetInst->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+	else
+	{
+		// 만약 뷰포트에 없으면 Add (예외상황 대비)
 		CraftWidgetInst->AddToViewport();
 	}
+
+
+	// 마우스 InputMode 설정
+	FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(CraftWidgetInst->TakeWidget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputMode.SetHideCursorDuringCapture(false);
+
+	PC->SetInputMode(InputMode);
+	PC->bShowMouseCursor = true;
+
 }

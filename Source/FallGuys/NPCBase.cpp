@@ -19,8 +19,8 @@ void ANPCBase::BeginPlay()
 	
 	//GetController() → 현재 Pawn에 붙은 컨트롤러 (플레이어든 AI든)
 	DefaultAIController = Cast<AAIController>(GetController()); //=> 직접할당 안해줘도 BP에서 할당하면 자동 할당됨.
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("PatrolPointA: %s, PatrolPointB"), 
-		*PatrolPointA->GetName(), *PatrolPointB->GetName()));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("PatrolPointA: %s, PatrolPointB"), 
+	//	*PatrolPointA->GetName(), *PatrolPointB->GetName()));
 
 	if (bCanPatrol && nullptr != PatrolPointA && nullptr != PatrolPointB)
 	{

@@ -24,4 +24,8 @@ public:
 
 	UPROPERTY()
 	UCraftingSystem* PublicCraftingSystem;
+
+	// CSV 파싱 전까지 임시 데이터 할당한 BP 클래스
+	UPROPERTY()
+	TSubclassOf<UCraftingSystem> CraftingSystemBPClass;
 };

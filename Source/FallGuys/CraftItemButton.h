@@ -16,6 +16,9 @@ class FALLGUYS_API UCraftItemButton : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCraftListItemSelected, int32, Index);
+
+public:
     UPROPERTY(meta = (BindWidget))
     UButton* CraftItemButton;
 
@@ -25,12 +28,13 @@ public:
     UPROPERTY(meta = (BindWidget))
     UTextBlock* CraftItemNameText;
 
-    //FCraftBaseData RecipeData;
+    UPROPERTY()
+    int32 CraftItemIndex;
 
-    //UPROPERTY(BlueprintAssignable)
-    //FOnRecipeSelected OnRecipeSelected;  // Delegate
+    UPROPERTY(BlueprintAssignable)
+    FOnCraftListItemSelected OnCraftListItemSelected;  // Delegate
 
-    void SetRecipeData(/*const FCraftBaseData& InData*/);
+    void SetRecipeData(FName ItemID, UTexture2D* Icon, int32 Index);
 
 private:
     UFUNCTION()

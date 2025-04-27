@@ -16,6 +16,8 @@ struct FReceiptItem
 	FName ItemID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ReceiptItem")
 	int32 Quantity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ReceiptItem")
+	UTexture2D* Icon;
 };
 
 USTRUCT(BlueprintType)
@@ -30,7 +32,9 @@ struct FCraftBaseData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
 	int32 MP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
-	float CraftingTime;
+	float ShowCraftingTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
+	float RealCraftingTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")
 	FName RequiredEquipment;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftBase")

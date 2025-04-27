@@ -23,6 +23,19 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* DetailContentCanvas;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DetailItemID;
+	UPROPERTY(meta = (BindWidget))
+	UImage* DetailItemICon;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DetailItemDescription;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DetailItemCraftTime;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* ButtonExit;
+	UPROPERTY(meta = (BindWidget))
+	UButton* ButtonMake;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UCraftItemButton> CraftItemButtonClass;
@@ -30,14 +43,30 @@ public:
 	UPROPERTY()
 	UCraftingSystem* CraftingSystem;
 
+	UPROPERTY()
+	APlayerController* PlayerController;
+
+private:
+	TArray<FCraftBaseData> CraftLists;
+
 public:
-	void InitWidget(UCraftingSystem* CraftingSystem);
+	virtual void NativeConstruct() override;
+
+private:
+	UFUNCTION()
+	void OnCraftItemButtonClicked(int32 ButtonIndex);
+
+public:
+	void InitWidget(UCraftingSystem* CraftingSystem, APlayerController* Controller);
 private:
 	void CreateCraftRecipeButtons();
 	
 private:
-	void SetDetailData();
 	void SetMakeActivate();
+
+	UFUNCTION()
 	void OnMakeButtonClicked();
+
+	UFUNCTION()
 	void OnExitButtonClicked();
 };
